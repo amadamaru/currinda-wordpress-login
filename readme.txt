@@ -1,4 +1,4 @@
-=== Facebook Login Widget ===
+﻿=== Facebook Login Widget ===
 Contributors: currinda
 Tags: event management, login widget, association management
 Requires at least: 4.1.0
@@ -52,9 +52,10 @@ The shortcode can be used anywhere and is specified as follows:
 
 In the settings pages you can set the following URLs will we be displayed when the user does not have a fully valid membership active:
 
-1. Inactive URL
-2. Expired URL
-3. Outstanding payment URL
+1. Login Success URL
+2. Inactive URL
+3. Expired URL
+4. Outstanding payment URL
 
 == Support ==
 
@@ -63,6 +64,9 @@ In the settings pages you can set the following URLs will we be displayed when t
 
 
 == Changelog ==
+
+= 0.3 =
+* Update to login interface and scripting
 
 = 0.2 = 
 * Update to Currinda v2.0 API and enhance shortcode behaviour.

@@ -61,6 +61,7 @@ class CurrindaLogin {
     $inactive_url = get_option('currinda_inactive_url');
     $expired_url = get_option('currinda_expired_url');
     $outstanding_url = get_option('currinda_outstanding_url');
+    $login_success_url = get_option('currinda_login_success_url');
     
     $user_id = wp_get_current_user()->ID;
     $details = get_user_meta($user_id, 'currinda_membership', true);
@@ -123,6 +124,7 @@ class CurrindaLogin {
 		$this->inactive_url = get_option('currinda_inactive_url');
     $this->expired_url = get_option('currinda_expired_url');
     $this->outstanding_url = get_option('currinda_outstanding_url');
+    $this->login_success_url = get_option('currinda_login_success_url');
   }
 
 	function menu_item () {
@@ -161,6 +163,12 @@ class CurrindaLogin {
 		  </tr>
 		  <tr>
         <td colspan="2">&nbsp;</td>
+		  </tr>
+		  <tr>
+        <td><p><strong>Login Success URL:</strong></p>
+            <p>Users will be redirected to this path when they login successfully.</p>
+            <p><i>e.g. http://yourdomain.com/contact</i></p></td>
+			  <td style="vertical-align:top"><input type="text" name="currinda_login_success_url" value="<?php echo $this->login_success_url;?>" size="80" /></td>
 		  </tr>
 		  <tr>
         <td><p><strong>Inactive membership URL:</strong></p>
@@ -236,6 +244,7 @@ class CurrindaLogin {
 			update_option( 'currinda_inactive_url', $_POST['currinda_inactive_url'] );
 			update_option( 'currinda_expired_url', $_POST['currinda_expired_url'] );
 			update_option( 'currinda_outstanding_url', $_POST['currinda_outstanding_url'] );
+			update_option( 'currinda_login_success_url', $_POST['currinda_login_success_url'] );
 				
       $this->update_variables();
 		}
@@ -372,6 +381,7 @@ class CurrindaLogin {
   }
 
   function setup_user_or_login($details) {
+	$jdata = array('success'=>true);
     $user_email = $details->Email;
     $full_name = $details->FirstName." ".$details->LastName;
 
@@ -406,12 +416,12 @@ class CurrindaLogin {
     wp_set_current_user( $user_id, $user->user_login );
     wp_set_auth_cookie( $user_id, true );
     do_action( 'wp_login', $user->user_login );
-    
-    //wp_redirect( site_url() );
-    
-    // Close the current window
-    echo "<HTML><BODY><SCRIPT src='" . plugins_url( '/inc/js/currinda.js', __FILE__ ) . "'></SCRIPT><SCRIPT>currinda_child();</SCRIPT></BODY></HTML>";
-    
+
+    if(get_option('currinda_login_success_url')){
+	$jdata['login_success_url'] = get_option('currinda_login_success_url');
+    }
+    header("Access-Control-Allow-Origin: *");
+    echo json_encode($jdata);
     exit(0);
   }
 
